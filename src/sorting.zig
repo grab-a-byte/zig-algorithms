@@ -61,6 +61,41 @@ fn merge(allocator: std.mem.Allocator, output: []u32) !void {
     }
 }
 
+pub fn heap_sort(items: []u32) void {
+    const n = items.len - 1;
+    build_max_heap(items);
+    for (0..n) |index| {
+        const i = n - index;
+        const first = items[0];
+        items[0] = items[i];
+        items[i] = first;
+        max_heapify(items, i, 0);
+    }
+}
+
+fn build_max_heap(items: []u32) void {
+    const n = (items.len / 2) - 1;
+    for (0..n) |value| {
+        const i = n - value;
+        max_heapify(items, n, i);
+    }
+}
+
+fn max_heapify(items: []u32, heap_size: usize, index: usize) void {
+    const left = (index * 2) + 1;
+    const right = (index * 2) + 2;
+
+    var largest = if (left < heap_size and items[left] > items[index]) left else index;
+    largest = if (right < heap_size and items[right] > items[largest]) right else largest;
+
+    if (largest != index) {
+        const value = items[largest];
+        items[largest] = items[index];
+        items[index] = value;
+        max_heapify(items, heap_size, largest);
+    }
+}
+
 test "merge sort 2 items" {
     var input = [_]u32{ 32, 12 };
     try merge_sort(std.testing.allocator, input[0..]);
