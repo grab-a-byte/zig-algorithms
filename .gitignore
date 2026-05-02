@@ -5,3 +5,11 @@ zig-out/
 /build/
 /build-*/
 /docgen_tmp/
+
+# MacOS Specific stuff
+.DS_Store
+.localized
+__MACOSX/
+.AppleDouble
+.LSOverride
+Icon[]
