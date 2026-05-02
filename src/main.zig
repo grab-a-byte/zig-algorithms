@@ -1,5 +1,5 @@
 const std = @import("std");
-const zig_sorting = @import("zig_sorting");
+const sorting = @import("sorting.zig");
 
 pub fn main(init: std.process.Init) !void {
     var r = std.Random.DefaultPrng.init(42);
@@ -15,7 +15,7 @@ pub fn main(init: std.process.Init) !void {
     const in_sort_values = try allocator.dupe(u32, vec.items);
     // print_array(in_sort_values, "before: ");
     var start = std.Io.Timestamp.now(init.io, .real).toMilliseconds();
-    zig_sorting.insertion_sort(in_sort_values);
+    sorting.insertion_sort(in_sort_values);
     var end = std.Io.Timestamp.now(init.io, .real).toMilliseconds();
     // print_array(in_sort_values, "");
     std.debug.print("{d}\n", .{end - start});
@@ -24,7 +24,7 @@ pub fn main(init: std.process.Init) !void {
     const merge_sort_values = try allocator.dupe(u32, vec.items);
     // print_array(merge_sort_values, "before: ");
     start = std.Io.Timestamp.now(init.io, .real).toMilliseconds();
-    try zig_sorting.merge_sort(allocator, merge_sort_values);
+    try sorting.merge_sort(allocator, merge_sort_values);
     end = std.Io.Timestamp.now(init.io, .real).toMilliseconds();
     // print_array(merge_sort_values, "");
     std.debug.print("{d}\n", .{end - start});
