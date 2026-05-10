@@ -90,27 +90,31 @@ fn max_heapify(items: []u32, heap_size: usize, index: usize) void {
 }
 
 //Quicksort
-// pub fn quicksort(items: []u32, start: usize, end: usize) void {
-//     if (start > end) return;
-//     std.debug.print("going from {d} to {d}\n", .{ start, end });
-//     const middle = partition(items, start, end);
-//     quicksort(items, start, middle);
-//     quicksort(items, middle, end);
-// }
+pub fn quicksort(items: []u32, start: usize, end: usize) void {
+    if (start >= end) return;
+    const middle = partition(items, start, end);
+    quicksort(items, start, middle -| 1);
+    quicksort(items, middle +| 1, end);
+}
 
-// fn partition(items: []u32, low: usize, high: usize) usize {
-//     const pivot = items[high];
-//     var i: u32 = low - 1;
-//     for (low..high - 1) |index| {
-//         if (items[index] <= pivot) {
-//             i = i + 1;
-//             std.mem.swap(u32, &items[i], &items[index]);
-//         }
-//     }
-
-//     std.mem.swap(u32, &items[i + 1], &items[high]);
-//     return i + 1;
-// }
+fn partition(items: []u32, low: usize, high: usize) usize {
+    const pivot = items[high];
+    const lowI64: i34 = @intCast(low);
+    var index: i34 = lowI64 - 1;
+    for (low..high) |value| {
+        if (items[value] <= pivot) {
+            index += 1;
+            const temp = items[@intCast(index)];
+            items[@intCast(index)] = items[value];
+            items[value] = temp;
+        }
+    }
+    const temp = items[@intCast(index + 1)];
+    items[@intCast(index + 1)] = items[high];
+    items[high] = temp;
+    print_array(items, "");
+    return @intCast(index + 1);
+}
 
 test "merge sort 2 items" {
     var input = [_]u32{ 32, 12 };
@@ -130,15 +134,24 @@ test "merge sort with 4 items" {
     try std.testing.expect(input[3] == 32);
 }
 
-// test "Quicksort should sort" {
-//     var input = [_]u32{ 2, 8, 7, 1, 3, 5, 6, 4 };
-//     quicksort(&input, 0, input.len - 1);
-//     try std.testing.expect(input[0] == 1);
-//     try std.testing.expect(input[1] == 2);
-//     try std.testing.expect(input[2] == 3);
-//     try std.testing.expect(input[3] == 4);
-//     try std.testing.expect(input[4] == 5);
-//     try std.testing.expect(input[5] == 6);
-//     try std.testing.expect(input[6] == 7);
-//     try std.testing.expect(input[7] == 8);
-// }
+test "Quicksort should sort" {
+    var input = [_]u32{ 2, 8, 7, 1, 3, 5, 6, 4 };
+    quicksort(&input, 0, input.len - 1);
+    try std.testing.expect(input[0] == 1);
+    try std.testing.expect(input[1] == 2);
+    try std.testing.expect(input[2] == 3);
+    try std.testing.expect(input[3] == 4);
+    try std.testing.expect(input[4] == 5);
+    try std.testing.expect(input[5] == 6);
+    try std.testing.expect(input[6] == 7);
+    try std.testing.expect(input[7] == 8);
+}
+
+fn print_array(items: []u32, prefix: []const u8) void {
+    std.debug.print("{s}", .{prefix});
+    std.debug.print("[", .{});
+    for (items) |i| {
+        std.debug.print("{d},", .{i});
+    }
+    std.debug.print("]\n", .{});
+}
